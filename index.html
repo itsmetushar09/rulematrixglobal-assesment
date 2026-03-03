@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CloudDev Full Practical</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="logo">CloudDev</div>
+
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#api">API Demo</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+
+        <div class="hamburger" id="hamburger">☰</div>
+    </nav>
+</header>
+
+<main>
+
+    <!-- HERO -->
+    <section id="hero" class="hero">
+        <h1>Modern Cloud Solutions</h1>
+        <p>Responsive | Dynamic | API Integrated</p>
+        <button id="heroBtn">Explore Features</button>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" class="features">
+        <h2>Our Features</h2>
+        <div class="feature-container" id="featureContainer"></div>
+    </section>
+
+    <!-- API SECTION -->
+    <section id="api" class="api-section">
+        <h2>Public API Demo</h2>
+        <button id="fetchBtn">Fetch Posts</button>
+        <p id="status"></p>
+        <ul id="dataList"></ul>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="contact">
+        <h2>Contact Us</h2>
+        <form id="contactForm">
+            <input type="text" id="name" placeholder="Full Name">
+            <input type="email" id="email" placeholder="Email">
+            <textarea id="message" placeholder="Message"></textarea>
+            <button type="submit">Submit</button>
+        </form>
+        <p id="formMessage"></p>
+    </section>
+
+</main>
+
+<footer>
+    <p>© <span id="year"></span> CloudDev. All Rights Reserved.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
