@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", () => {
+
 const API_KEY = "f5431e11e81297e5664173f1381e1552";
 
 const searchBtn = document.getElementById("searchBtn");
@@ -12,10 +14,18 @@ const wind = document.getElementById("wind");
 const loader = document.getElementById("loader");
 const themeToggle = document.getElementById("themeToggle");
 
+// 🛑 SAFETY CHECK (IMPORTANT)
+if (!searchBtn || !cityInput) {
+    console.error("HTML elements not found!");
+    return;
+}
+
 // DARK MODE
-themeToggle.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-});
+if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+    });
+}
 
 // FETCH WEATHER
 async function getWeather(city) {
@@ -26,9 +36,11 @@ async function getWeather(city) {
             `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
         );
 
-        if (!res.ok) throw new Error("City not found");
-
         const data = await res.json();
+
+        if (data.cod !== 200) {
+            throw new Error(data.message);
+        }
 
         cityName.textContent = data.name;
         temp.textContent = `🌡 Temp: ${data.main.temp} °C`;
@@ -37,9 +49,10 @@ async function getWeather(city) {
         wind.textContent = `💨 Wind: ${data.wind.speed} m/s`;
 
     } catch (err) {
+        console.error(err);
         cityName.textContent = "Error!";
-        temp.textContent = "";
         desc.textContent = "City not found!";
+        temp.textContent = "";
         humidity.textContent = "";
         wind.textContent = "";
     } finally {
@@ -54,7 +67,7 @@ searchBtn.addEventListener("click", () => {
 });
 
 // ENTER KEY SUPPORT
-cityInput.addEventListener("keypress", (e) => {
+cityInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
         searchBtn.click();
     }
@@ -62,3 +75,5 @@ cityInput.addEventListener("keypress", (e) => {
 
 // DEFAULT LOAD
 getWeather("Delhi");
+
+});
