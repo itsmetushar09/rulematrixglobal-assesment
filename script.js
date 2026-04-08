@@ -1,87 +1,64 @@
-// NAV TOGGLE
-const hamburger = document.getElementById("hamburger");
-const navLinks = document.getElementById("navLinks");
+const API_KEY = "835ea6a02d111de70d3ed7c116cc5191";
 
-hamburger.addEventListener("click", () => {
-    navLinks.classList.toggle("active");
+const searchBtn = document.getElementById("searchBtn");
+const cityInput = document.getElementById("cityInput");
+
+const cityName = document.getElementById("cityName");
+const temp = document.getElementById("temp");
+const desc = document.getElementById("desc");
+const humidity = document.getElementById("humidity");
+const wind = document.getElementById("wind");
+
+const loader = document.getElementById("loader");
+const themeToggle = document.getElementById("themeToggle");
+
+// DARK MODE
+themeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
 });
 
-// HERO BUTTON
-document.getElementById("heroBtn").addEventListener("click", () => {
-    alert("Welcome to CloudDev Full Practical Project!");
+// FETCH WEATHER
+async function getWeather(city) {
+    loader.style.display = "block";
+
+    try {
+        const res = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
+        );
+
+        if (!res.ok) throw new Error("City not found");
+
+        const data = await res.json();
+
+        cityName.textContent = data.name;
+        temp.textContent = `🌡 Temp: ${data.main.temp} °C`;
+        desc.textContent = `🌥 ${data.weather[0].description}`;
+        humidity.textContent = `💧 Humidity: ${data.main.humidity}%`;
+        wind.textContent = `💨 Wind: ${data.wind.speed} m/s`;
+
+    } catch (err) {
+        cityName.textContent = "Error!";
+        temp.textContent = "";
+        desc.textContent = "City not found!";
+        humidity.textContent = "";
+        wind.textContent = "";
+    } finally {
+        loader.style.display = "none";
+    }
+}
+
+// BUTTON CLICK
+searchBtn.addEventListener("click", () => {
+    const city = cityInput.value.trim();
+    if (city) getWeather(city);
 });
 
-// DYNAMIC YEAR
-document.getElementById("year").textContent = new Date().getFullYear();
-
-// DYNAMIC FEATURES
-const features = [
-    "Fully Responsive Design",
-    "API Integration",
-    "Form Validation",
-    "Dynamic Rendering"
-];
-
-const featureContainer = document.getElementById("featureContainer");
-
-features.forEach(item => {
-    const div = document.createElement("div");
-    div.classList.add("feature-card");
-    div.textContent = item;
-    featureContainer.appendChild(div);
-});
-
-// FORM VALIDATION
-const form = document.getElementById("contactForm");
-const formMessage = document.getElementById("formMessage");
-
-form.addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const message = document.getElementById("message").value.trim();
-
-    if (!name || !email || !message) {
-        formMessage.textContent = "All fields are required!";
-        formMessage.style.color = "red";
-    } else {
-        formMessage.textContent = "Form submitted successfully!";
-        formMessage.style.color = "green";
-        form.reset();
+// ENTER KEY SUPPORT
+cityInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+        searchBtn.click();
     }
 });
 
-// API FETCH
-const fetchBtn = document.getElementById("fetchBtn");
-const status = document.getElementById("status");
-const dataList = document.getElementById("dataList");
-
-fetchBtn.addEventListener("click", () => {
-    status.textContent = "Loading data...";
-    status.style.color = "blue";
-    dataList.innerHTML = "";
-
-    fetch("https://jsonplaceholder.typicode.com/posts?_limit=5")
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Network error");
-            }
-            return response.json();
-        })
-        .then(data => {
-            status.textContent = "Data fetched successfully!";
-            status.style.color = "green";
-
-            data.forEach(post => {
-                const li = document.createElement("li");
-                li.innerHTML = `<strong>${post.title}</strong><p>${post.body}</p>`;
-                dataList.appendChild(li);
-            });
-        })
-        .catch(error => {
-            status.textContent = "Error fetching data!";
-            status.style.color = "red";
-            console.error(error);
-        });
-});
+// DEFAULT LOAD
+getWeather("Delhi");
